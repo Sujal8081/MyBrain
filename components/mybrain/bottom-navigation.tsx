@@ -10,52 +10,40 @@ import {
   NotebookText,
 } from "lucide-react";
 
+import { getActiveNavigationSection } from "@/lib/navigation/route-state";
 import { cn } from "@/lib/utils";
 
 const navigationItems = [
-  { label: "Home", href: "/protected", icon: Home, matches: ["/protected"] },
+  { label: "Home", href: "/protected", icon: Home, section: "home" },
   {
     label: "Tasks",
     href: "/protected/tasks",
     icon: CheckCircle2,
-    matches: ["/protected/tasks"],
+    section: "tasks",
   },
   {
     label: "Chat",
     href: "/protected/chat",
     icon: MessageCircle,
-    matches: ["/protected/chat"],
+    section: "chat",
   },
   {
     label: "Notes",
     href: "/protected/notes",
     icon: NotebookText,
-    matches: [
-      "/protected/notes",
-      "/protected/documents",
-      "/protected/voice-notes",
-    ],
+    section: "notes",
   },
   {
     label: "More",
     href: "/protected/more",
     icon: Menu,
-    matches: [
-      "/protected/more",
-      "/protected/reminders",
-      "/protected/account",
-    ],
+    section: "more",
   },
 ];
 
-function isItemActive(pathname: string, matches: string[]) {
-  return matches.some(
-    (path) => pathname === path || pathname.startsWith(`${path}/`),
-  );
-}
-
 export function BottomNavigation() {
   const pathname = usePathname();
+  const activeSection = getActiveNavigationSection(pathname);
 
   return (
     <>
@@ -65,7 +53,7 @@ export function BottomNavigation() {
       >
         <ul className="mx-auto grid max-w-lg grid-cols-5">
           {navigationItems.map((item) => {
-            const active = isItemActive(pathname, item.matches);
+            const active = activeSection === item.section;
             const Icon = item.icon;
 
             return (
@@ -90,7 +78,7 @@ export function BottomNavigation() {
       <nav aria-label="Primary navigation" className="hidden md:block">
         <ul className="space-y-2">
           {navigationItems.map((item) => {
-            const active = isItemActive(pathname, item.matches);
+            const active = activeSection === item.section;
             const Icon = item.icon;
 
             return (
