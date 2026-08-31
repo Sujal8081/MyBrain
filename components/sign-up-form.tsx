@@ -12,10 +12,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { BrandMark } from "@/components/mybrain/brand-mark";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Brain } from "lucide-react";
+
 
 export function SignUpForm({
   className,
@@ -60,19 +61,14 @@ export function SignUpForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="flex flex-col items-center text-center">
-        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e8f2ec] text-[#377458]">
-          <Brain aria-hidden="true" className="h-6 w-6" />
-        </span>
-        <p className="mt-3 text-xl font-semibold tracking-tight text-[#26312d]">
-          MyBrain
-        </p>
+        <BrandMark />
       </div>
-      <Card className="rounded-2xl border-[#dde3df] shadow-[0_18px_50px_rgba(39,55,48,0.08)]">
+      <Card className="rounded-[18px] border-[#E4E8E5] shadow-[0_1px_2px_rgba(31,35,40,0.025),0_14px_40px_rgba(31,35,40,0.06)]">
         <CardHeader className="space-y-2 p-6 pb-4 sm:p-8 sm:pb-5">
-          <CardTitle className="text-2xl tracking-[-0.025em] text-[#26312d]">
+          <CardTitle className="text-2xl tracking-[-0.025em] text-[#1F2328]">
             Create your account
           </CardTitle>
-          <CardDescription className="leading-6 text-[#66726d]">
+          <CardDescription className="leading-6 text-[#66716C]">
             Start building a quieter place for your tasks and thoughts.
           </CardDescription>
         </CardHeader>
@@ -89,7 +85,7 @@ export function SignUpForm({
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 rounded-xl bg-[#fafbf9] px-4"
+                  className="h-12 bg-[#F7F8F6] px-4"
                 />
               </div>
               <div className="grid gap-2">
@@ -104,7 +100,7 @@ export function SignUpForm({
                   autoComplete="new-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="h-12 rounded-xl bg-[#fafbf9] px-4"
+                  className="h-12 bg-[#F7F8F6] px-4"
                 />
               </div>
               <div className="grid gap-2">
@@ -119,7 +115,7 @@ export function SignUpForm({
                   autoComplete="new-password"
                   value={repeatPassword}
                   onChange={(e) => setRepeatPassword(e.target.value)}
-                  className="h-12 rounded-xl bg-[#fafbf9] px-4"
+                  className="h-12 bg-[#F7F8F6] px-4"
                 />
               </div>
               {error && (
@@ -134,17 +130,17 @@ export function SignUpForm({
               <Button
                 type="submit"
                 size="lg"
-                className="min-h-12 w-full rounded-xl"
+                className="min-h-12 w-full"
                 disabled={isLoading}
               >
                 {isLoading ? "Creating an account..." : "Sign up"}
               </Button>
             </div>
-            <div className="mt-6 text-center text-sm text-[#66726d]">
+            <div className="mt-6 text-center text-sm text-[#66716C]">
               Already have an account?{" "}
               <Link
                 href="/auth/login"
-                className="font-medium text-[#356f9f] underline-offset-4 hover:underline"
+                className="rounded-md font-semibold text-[#4F806A] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7FAAE0]"
               >
                 Sign in
               </Link>

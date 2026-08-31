@@ -19,6 +19,8 @@ import {
   updateTaskStatusAction,
 } from "@/app/protected/tasks/actions";
 import { EmptyState } from "@/components/mybrain/empty-state";
+import { PageHeader } from "@/components/mybrain/page-header";
+import { StatusBadge } from "@/components/mybrain/status-badge";
 import { TaskForm } from "@/components/tasks/task-form";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -37,18 +39,6 @@ const filters: { label: string; value: TaskFilter }[] = [
   { label: "In Progress", value: "in_progress" },
   { label: "Done", value: "done" },
 ];
-
-const statusLabels: Record<TaskStatus, string> = {
-  todo: "Todo",
-  in_progress: "In Progress",
-  done: "Done",
-};
-
-const statusClasses: Record<TaskStatus, string> = {
-  todo: "bg-[#f1f3f1] text-[#5f6b65]",
-  in_progress: "bg-[#edf5fb] text-[#356f9f]",
-  done: "bg-[#eaf4ee] text-[#377458]",
-};
 
 interface TaskManagerProps {
   initialTasks: Task[];
@@ -138,34 +128,27 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
 
   return (
     <div>
-      <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#4d7d68]">
-            Your day, made clear
-          </p>
-          <h1 className="text-3xl font-semibold tracking-[-0.03em] text-[#26312d] sm:text-4xl">
-            Tasks
-          </h1>
-          <p className="mt-2 max-w-xl text-base leading-7 text-[#66726d]">
-            Keep the next important thing visible and move it forward calmly.
-          </p>
-        </div>
-        <Button
-          id="add-task"
-          type="button"
-          size="lg"
-          onClick={() => {
-            setEditingTask(null);
-            setShowForm(true);
-          }}
-          className="min-h-12 rounded-xl px-5"
-        >
-          <Plus aria-hidden="true" />
-          Add task
-        </Button>
-      </div>
+      <PageHeader
+        eyebrow="Your day, made clear"
+        title="Tasks"
+        description="Keep the next important thing visible and move it forward calmly."
+        action={
+          <Button
+            id="add-task"
+            type="button"
+            size="lg"
+            onClick={() => {
+              setEditingTask(null);
+              setShowForm(true);
+            }}
+          >
+            <Plus aria-hidden="true" />
+            Add task
+          </Button>
+        }
+      />
 
-      <div className="mb-6 overflow-x-auto pb-1">
+      <div className="mb-5 max-w-full overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex min-w-max gap-2" role="tablist" aria-label="Filter tasks">
           {filters.map((item) => {
             const count =
@@ -182,10 +165,10 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
                 aria-selected={selected}
                 onClick={() => setFilter(item.value)}
                 className={cn(
-                  "min-h-11 rounded-xl border px-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4f86c6]",
+                  "min-h-11 rounded-full border px-4 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7FAAE0] motion-reduce:transition-none",
                   selected
-                    ? "border-[#b9d1c3] bg-[#eaf4ee] text-[#2f694f]"
-                    : "border-[#dde3df] bg-white text-[#66726d] hover:bg-[#f8faf8]",
+                    ? "border-[#BCD0C3] bg-[#EAF3EE] font-semibold text-[#3F715A]"
+                    : "border-[#E4E8E5] bg-white text-[#66716C] hover:bg-[#F2F4F2]",
                 )}
               >
                 {item.label} <span className="ml-1 text-xs opacity-70">{count}</span>
@@ -213,7 +196,7 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
       ) : null}
 
       {visibleTasks.length === 0 ? (
-        <div className="rounded-2xl border border-[#dde3df] bg-white shadow-[0_12px_30px_rgba(39,55,48,0.04)]">
+        <div className="surface-card">
           <EmptyState
             icon={filter === "done" ? CheckCircle2 : ListChecks}
             title={tasks.length === 0 ? "No tasks yet" : `No ${filters.find((item) => item.value === filter)?.label.toLowerCase()} tasks`}
@@ -229,7 +212,7 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
                   type="button"
                   size="lg"
                   onClick={() => setShowForm(true)}
-                  className="min-h-12 rounded-xl"
+                  className="min-h-12"
                 >
                   <Plus aria-hidden="true" />
                   Add your first task
@@ -239,7 +222,7 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
           />
         </div>
       ) : (
-        <div className="space-y-3" aria-busy={isPending}>
+        <div className="space-y-2.5" aria-busy={isPending}>
           {visibleTasks.map((task) => {
             const taskPending = pendingTaskId === task.id;
             const complete = task.status === "done";
@@ -248,8 +231,8 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
               <article
                 key={task.id}
                 className={cn(
-                  "rounded-2xl border border-[#dde3df] bg-white p-4 shadow-[0_8px_24px_rgba(39,55,48,0.035)] sm:p-5",
-                  complete && "bg-[#fbfcfb]",
+                  "surface-card p-4 transition-[border-color,opacity] duration-200 hover:border-[#CBD5D0] sm:p-5 motion-reduce:transition-none",
+                  complete && "bg-[#FBFCFB]",
                   taskPending && "opacity-60",
                 )}
               >
@@ -260,10 +243,10 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
                     disabled={taskPending}
                     aria-label={complete ? `Mark ${task.title} as todo` : `Mark ${task.title} as done`}
                     className={cn(
-                      "mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4f86c6]",
+                      "mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7FAAE0] motion-reduce:transition-none",
                       complete
-                        ? "border-[#a8c9b5] bg-[#eaf4ee] text-[#377458]"
-                        : "border-[#ccd5d0] bg-white text-[#8b9690] hover:border-[#8fb29d] hover:text-[#377458]",
+                        ? "border-[#BBD1C4] bg-[#EAF3EE] text-[#4F806A]"
+                        : "border-[#D2DAD6] bg-white text-[#8B9690] hover:border-[#8FAE9A] hover:text-[#4F806A]",
                     )}
                   >
                     {complete ? <Check aria-hidden="true" /> : <Circle aria-hidden="true" />}
@@ -274,33 +257,26 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
                       <div>
                         <h2
                           className={cn(
-                            "text-base font-semibold leading-6 text-[#2c3733]",
-                            complete && "text-[#74807a] line-through",
+                            "text-[15px] font-semibold leading-6 text-[#1F2328]",
+                            complete && "text-[#78827D] line-through",
                           )}
                         >
                           {task.title}
                         </h2>
                         {task.description ? (
-                          <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-[#6a756f]">
+                          <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-[#66716C]">
                             {task.description}
                           </p>
                         ) : null}
                       </div>
-                      <span
-                        className={cn(
-                          "w-fit shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold",
-                          statusClasses[task.status],
-                        )}
-                      >
-                        {statusLabels[task.status]}
-                      </span>
+                      <StatusBadge status={task.status} />
                     </div>
 
-                    <div className="mt-4 flex flex-col gap-3 border-t border-[#edf0ee] pt-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="flex items-center gap-2 text-xs text-[#66726d]">
+                    <div className="mt-3.5 flex flex-col gap-3 border-t border-[#EEF1EF] pt-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex items-center gap-2 text-xs text-[#66716C]">
                         {task.due_date ? (
                           <>
-                            <CalendarClock aria-hidden="true" className="h-4 w-4 text-[#4d7d68]" />
+                            <CalendarClock aria-hidden="true" className="h-4 w-4 text-[#4F806A]" />
                             Due {formatTaskDate(task.due_date)}
                           </>
                         ) : (
@@ -319,7 +295,7 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
                           }
                           disabled={taskPending}
                           aria-label={`Change status for ${task.title}`}
-                          className="h-10 rounded-xl border border-[#d9e1dc] bg-white px-3 text-xs font-medium outline-none focus-visible:ring-2 focus-visible:ring-[#4f86c6]"
+                          className="h-10 max-w-[8.5rem] rounded-xl border border-[#E4E8E5] bg-white px-3 text-xs font-medium text-[#1F2328] outline-none focus-visible:ring-2 focus-visible:ring-[#7FAAE0]"
                         >
                           <option value="todo">Todo</option>
                           <option value="in_progress">In Progress</option>
@@ -335,7 +311,7 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
                           }}
                           disabled={taskPending}
                           aria-label={`Edit ${task.title}`}
-                          className="h-10 w-10 rounded-xl text-[#66726d]"
+                          className="h-10 w-10 text-[#66716C]"
                         >
                           <Pencil aria-hidden="true" />
                         </Button>
@@ -346,7 +322,7 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
                           onClick={() => handleDelete(task)}
                           disabled={taskPending}
                           aria-label={`Delete ${task.title}`}
-                          className="h-10 w-10 rounded-xl text-[#9a5050] hover:bg-red-50 hover:text-[#7c3f3f]"
+                          className="h-10 w-10 text-[#A35656] hover:bg-[#FBECEC] hover:text-[#873F3F]"
                         >
                           <Trash2 aria-hidden="true" />
                         </Button>

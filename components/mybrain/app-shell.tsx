@@ -1,7 +1,6 @@
-import { Brain } from "lucide-react";
-
 import { LogoutButton } from "@/components/logout-button";
 import { BottomNavigation } from "@/components/mybrain/bottom-navigation";
+import { BrandMark } from "@/components/mybrain/brand-mark";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -12,42 +11,32 @@ export function AppShell({ children, email }: AppShellProps) {
   const initial = email?.charAt(0).toUpperCase() || "M";
 
   return (
-    <div className="min-h-svh bg-[#f7f8f5] text-[#26312d]">
-      <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-[#dde3df] bg-white px-5 py-7 md:flex md:flex-col">
-        <div className="mb-10 flex items-center gap-3 px-2">
-          <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#e8f2ec] text-[#377458]">
-            <Brain aria-hidden="true" className="h-5 w-5" />
-          </span>
-          <span className="text-xl font-semibold tracking-tight">MyBrain</span>
-        </div>
+    <div className="min-h-svh bg-[#F7F8F6] text-[#1F2328]">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 border-r border-[#E4E8E5] bg-white px-4 py-6 md:flex md:flex-col">
+        <BrandMark className="mb-8 px-2" />
         <BottomNavigation />
-        <div className="mt-auto border-t border-[#e6eae7] pt-5">
-          <div className="mb-3 flex items-center gap-3 px-2">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#edf5fb] text-sm font-semibold text-[#285f94]">
+        <div className="mt-auto border-t border-[#E4E8E5] pt-4">
+          <div className="mb-2 flex items-center gap-3 rounded-[14px] px-2 py-2">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EAF2F8] text-sm font-semibold text-[#557FAE]">
               {initial}
             </span>
-            <span className="min-w-0 truncate text-xs text-[#66726d]">
+            <span className="min-w-0 truncate text-xs font-medium text-[#66716C]">
               {email || "Your account"}
             </span>
           </div>
           <LogoutButton
             variant="ghost"
-            className="h-11 w-full justify-start rounded-xl px-3 text-[#66726d] hover:bg-[#f2f5f2] hover:text-[#26312d]"
+            className="h-11 w-full justify-start px-3 text-[#66716C] hover:bg-[#F2F4F2] hover:text-[#1F2328]"
           />
         </div>
       </aside>
 
-      <div className="md:pl-64">
-        <header className="sticky top-0 z-40 border-b border-[#dde3df] bg-[#f7f8f5]/95 px-5 py-3 backdrop-blur md:hidden">
+      <div className="md:pl-60">
+        <header className="sticky top-0 z-40 border-b border-[#E4E8E5] bg-[#F7F8F6]/95 px-5 py-3 backdrop-blur md:hidden">
           <div className="mx-auto flex max-w-lg items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#e8f2ec] text-[#377458]">
-                <Brain aria-hidden="true" className="h-5 w-5" />
-              </span>
-              <span className="text-lg font-semibold tracking-tight">MyBrain</span>
-            </div>
+            <BrandMark compact />
             <div
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-[#edf5fb] text-sm font-semibold text-[#285f94]"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-[#EAF2F8] text-sm font-semibold text-[#557FAE]"
               aria-label={email ? `Signed in as ${email}` : "Signed in"}
               title={email || "Signed in"}
             >
@@ -56,7 +45,7 @@ export function AppShell({ children, email }: AppShellProps) {
           </div>
         </header>
 
-        <main className="mx-auto min-h-svh w-full max-w-5xl px-5 pb-28 pt-8 sm:px-8 md:pb-12 md:pt-12 lg:px-12">
+        <main className="mx-auto min-h-svh w-full max-w-[960px] px-5 pb-[calc(6.75rem+env(safe-area-inset-bottom))] pt-7 sm:px-8 md:pb-14 md:pt-10 lg:px-10">
           {children}
         </main>
       </div>

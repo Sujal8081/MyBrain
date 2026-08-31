@@ -1,8 +1,9 @@
-import Link from "next/link";
-import { Bell, ChevronRight, LogOut, UserRound } from "lucide-react";
+import { Bell, Info, LogOut, Palette, ShieldCheck, UserRound } from "lucide-react";
 
 import { LogoutButton } from "@/components/logout-button";
 import { PageHeader } from "@/components/mybrain/page-header";
+import { SectionHeader } from "@/components/mybrain/section-header";
+import { SettingsRow } from "@/components/mybrain/settings-row";
 
 const moreItems = [
   {
@@ -10,12 +11,14 @@ const moreItems = [
     description: "Review time-sensitive items and future alerts.",
     href: "/protected/reminders",
     icon: Bell,
+    tone: "blue" as const,
   },
   {
     title: "Account",
     description: "View your account area and profile placeholder.",
     href: "/protected/account",
     icon: UserRound,
+    tone: "green" as const,
   },
 ];
 
@@ -26,37 +29,35 @@ export default function MorePage() {
         title="More"
         description="Account controls and a few useful places that do not need to crowd your day."
       />
-      <div className="overflow-hidden rounded-2xl border border-[#dde3df] bg-white shadow-[0_12px_30px_rgba(39,55,48,0.04)]">
-        {moreItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex min-h-20 items-center gap-4 border-b border-[#e7ebe8] px-5 py-4 transition-colors last:border-0 hover:bg-[#f8faf8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#4f86c6]"
-            >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#edf5fb] text-[#356f9f]">
-                <Icon aria-hidden="true" className="h-5 w-5" />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block font-medium text-[#2c3733]">{item.title}</span>
-                <span className="mt-0.5 block text-sm text-[#6a756f]">
-                  {item.description}
-                </span>
-              </span>
-              <ChevronRight aria-hidden="true" className="h-5 w-5 text-[#9aa39e]" />
-            </Link>
-          );
-        })}
-        <div className="flex min-h-20 items-center gap-4 px-5 py-4">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#f8eeee] text-[#a44c4c]">
-            <LogOut aria-hidden="true" className="h-5 w-5" />
+      <div className="space-y-7">
+        <section aria-labelledby="more-your-space">
+          <SectionHeader id="more-your-space" title="Your space" />
+          <div className="surface-card divide-y divide-[#EEF1EF] overflow-hidden">
+            {moreItems.map((item) => (
+              <SettingsRow key={item.href} {...item} />
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="more-preferences">
+          <SectionHeader id="more-preferences" title="Preferences" />
+          <div className="surface-card divide-y divide-[#EEF1EF] overflow-hidden">
+            <SettingsRow icon={ShieldCheck} title="Permissions" description="Manage future device and data permissions." meta="Later" />
+            <SettingsRow icon={Palette} title="Appearance" description="Personalize how MyBrain looks and feels." meta="Later" tone="green" />
+            <SettingsRow icon={Info} title="About MyBrain" description="Product details and future release information." meta="Phase 3" />
+          </div>
+        </section>
+
+        <section aria-label="Sign out" className="surface-card flex min-h-[76px] items-center gap-3.5 px-4 py-3.5">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-[#FBECEC] text-[#A44747]">
+            <LogOut aria-hidden="true" className="h-[18px] w-[18px]" />
           </span>
-          <LogoutButton
-            variant="ghost"
-            className="h-auto flex-1 justify-start p-0 text-base font-medium text-[#8f4545] hover:bg-transparent hover:text-[#713434]"
-          />
-        </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-[15px] font-semibold text-[#1F2328]">Sign out</p>
+            <p className="mt-0.5 text-[13px] text-[#66716C]">End your current MyBrain session.</p>
+          </div>
+          <LogoutButton variant="ghost" className="shrink-0 px-3 text-[#9E4444] hover:bg-[#FBECEC] hover:text-[#873F3F]" />
+        </section>
       </div>
     </div>
   );

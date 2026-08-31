@@ -100,19 +100,19 @@ export function TaskForm({ task, onClose, onSaved }: TaskFormProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-end justify-center bg-[#1f2925]/30 p-0 backdrop-blur-[2px] sm:items-center sm:p-6">
+    <div className="fixed inset-0 z-[70] flex items-end justify-center bg-[#1F2328]/30 p-0 sm:items-center sm:p-6">
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="task-form-title"
-        className="max-h-[92svh] w-full overflow-y-auto rounded-t-3xl border border-[#d9e1dc] bg-white shadow-2xl sm:max-w-xl sm:rounded-3xl"
+        className="max-h-[92svh] w-full overflow-x-hidden overflow-y-auto rounded-t-[22px] border border-[#E4E8E5] bg-white shadow-[0_24px_64px_rgba(31,35,40,0.14)] sm:max-w-xl sm:rounded-[18px]"
       >
-        <div className="sticky top-0 z-10 flex items-start justify-between border-b border-[#e5eae6] bg-white px-5 py-5 sm:px-7">
+        <div className="sticky top-0 z-10 flex items-start justify-between border-b border-[#E4E8E5] bg-white px-5 py-4 sm:px-7 sm:py-5">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#4d7d68]">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#4F806A]">
               {isEditing ? "Edit" : "New task"}
             </p>
-            <h2 id="task-form-title" className="mt-1 text-2xl font-semibold tracking-tight">
+            <h2 id="task-form-title" className="mt-1 text-2xl font-semibold tracking-[-0.025em] text-[#1F2328]">
               {isEditing ? "Update task" : "What needs your attention?"}
             </h2>
           </div>
@@ -123,7 +123,7 @@ export function TaskForm({ task, onClose, onSaved }: TaskFormProps) {
             onClick={onClose}
             disabled={isPending}
             aria-label="Close task form"
-            className="h-11 w-11 rounded-xl"
+            className="h-11 w-11"
           >
             <X aria-hidden="true" />
           </Button>
@@ -140,7 +140,7 @@ export function TaskForm({ task, onClose, onSaved }: TaskFormProps) {
               required
               autoFocus
               maxLength={200}
-              className="h-12 rounded-xl bg-[#fafbf9] px-4"
+              className="h-12 bg-[#F7F8F6] px-4"
             />
           </div>
 
@@ -152,18 +152,18 @@ export function TaskForm({ task, onClose, onSaved }: TaskFormProps) {
               onChange={(event) => setDescription(event.target.value)}
               placeholder="Add useful context"
               rows={4}
-              className="flex w-full resize-none rounded-xl border border-input bg-[#fafbf9] px-4 py-3 text-sm shadow-sm outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+              className="flex w-full resize-none rounded-[14px] border border-input bg-[#F7F8F6] px-4 py-3 text-sm text-[#1F2328] outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-muted-foreground focus-visible:border-[#B9C9C0] focus-visible:ring-2 focus-visible:ring-[#7FAAE0]/60 disabled:opacity-50 motion-reduce:transition-none"
             />
           </div>
 
           <fieldset>
             <legend className="mb-3 flex items-center gap-2 text-sm font-medium">
-              <CalendarDays aria-hidden="true" className="h-4 w-4 text-[#4d7d68]" />
+              <CalendarDays aria-hidden="true" className="h-4 w-4 text-[#4F806A]" />
               Due date (optional)
             </legend>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 min-[380px]:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="task-due-date" className="text-xs text-[#66726d]">
+                <Label htmlFor="task-due-date" className="text-xs text-[#66716C]">
                   Date
                 </Label>
                 <Input
@@ -171,11 +171,11 @@ export function TaskForm({ task, onClose, onSaved }: TaskFormProps) {
                   type="date"
                   value={dueDate}
                   onChange={(event) => setDueDate(event.target.value)}
-                  className="h-12 rounded-xl bg-[#fafbf9]"
+                  className="h-12 bg-[#F7F8F6]"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="task-due-time" className="text-xs text-[#66726d]">
+                <Label htmlFor="task-due-time" className="text-xs text-[#66716C]">
                   Time
                 </Label>
                 <Input
@@ -184,7 +184,7 @@ export function TaskForm({ task, onClose, onSaved }: TaskFormProps) {
                   value={dueTime}
                   onChange={(event) => setDueTime(event.target.value)}
                   disabled={!dueDate}
-                  className="h-12 rounded-xl bg-[#fafbf9]"
+                  className="h-12 bg-[#F7F8F6]"
                 />
               </div>
             </div>
@@ -198,7 +198,7 @@ export function TaskForm({ task, onClose, onSaved }: TaskFormProps) {
               onChange={(event) => {
                 if (isTaskStatus(event.target.value)) setStatus(event.target.value);
               }}
-              className="h-12 w-full rounded-xl border border-input bg-[#fafbf9] px-4 text-sm shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="h-12 w-full rounded-[14px] border border-input bg-[#F7F8F6] px-4 text-sm text-[#1F2328] outline-none focus-visible:ring-2 focus-visible:ring-[#7FAAE0]"
             >
               <option value="todo">Todo</option>
               <option value="in_progress">In Progress</option>
@@ -207,29 +207,29 @@ export function TaskForm({ task, onClose, onSaved }: TaskFormProps) {
           </div>
 
           {!isEditing ? (
-            <div className="rounded-2xl border border-[#dde3df] bg-[#f8faf8] p-4">
+            <div className="rounded-2xl border border-[#E4E8E5] bg-[#F7F8F6] p-4">
               <label className="flex min-h-11 cursor-pointer items-center justify-between gap-4">
                 <span className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf5fb] text-[#356f9f]">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EAF2F8] text-[#557FAE]">
                     <Bell aria-hidden="true" className="h-4 w-4" />
                   </span>
                   <span>
                     <span className="block text-sm font-medium">Add reminder</span>
-                    <span className="block text-xs text-[#6a756f]">Optional</span>
+                    <span className="block text-xs text-[#66716C]">Optional</span>
                   </span>
                 </span>
                 <input
                   type="checkbox"
                   checked={reminderEnabled}
                   onChange={(event) => setReminderEnabled(event.target.checked)}
-                  className="h-5 w-5 rounded border-[#aebbb4] text-[#377458] focus:ring-[#4f86c6]"
+                  className="h-5 w-5 rounded border-[#AEBBB4] text-[#4F806A] focus:ring-[#7FAAE0]"
                 />
               </label>
 
               {reminderEnabled ? (
-                <div className="mt-4 grid grid-cols-2 gap-3 border-t border-[#e0e6e2] pt-4">
+                <div className="mt-4 grid grid-cols-1 gap-3 border-t border-[#E4E8E5] pt-4 min-[380px]:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="reminder-date" className="text-xs text-[#66726d]">
+                    <Label htmlFor="reminder-date" className="text-xs text-[#66716C]">
                       Reminder date
                     </Label>
                     <Input
@@ -238,11 +238,11 @@ export function TaskForm({ task, onClose, onSaved }: TaskFormProps) {
                       value={reminderDate}
                       onChange={(event) => setReminderDate(event.target.value)}
                       required={reminderEnabled}
-                      className="h-12 rounded-xl bg-white"
+                      className="h-12 bg-white"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="reminder-time" className="text-xs text-[#66726d]">
+                    <Label htmlFor="reminder-time" className="text-xs text-[#66716C]">
                       Reminder time
                     </Label>
                     <Input
@@ -251,7 +251,7 @@ export function TaskForm({ task, onClose, onSaved }: TaskFormProps) {
                       value={reminderTime}
                       onChange={(event) => setReminderTime(event.target.value)}
                       required={reminderEnabled}
-                      className="h-12 rounded-xl bg-white"
+                      className="h-12 bg-white"
                     />
                   </div>
                 </div>
@@ -269,14 +269,14 @@ export function TaskForm({ task, onClose, onSaved }: TaskFormProps) {
             </p>
           ) : null}
 
-          <div className="flex flex-col-reverse gap-3 border-t border-[#e5eae6] pt-5 sm:flex-row sm:justify-end">
+          <div className="flex flex-col-reverse gap-3 border-t border-[#E4E8E5] pt-5 sm:flex-row sm:justify-end">
             <Button
               type="button"
               variant="outline"
               size="lg"
               onClick={onClose}
               disabled={isPending}
-              className="min-h-12 rounded-xl"
+              className="min-h-12"
             >
               Cancel
             </Button>
@@ -284,7 +284,7 @@ export function TaskForm({ task, onClose, onSaved }: TaskFormProps) {
               type="submit"
               size="lg"
               disabled={isPending || !title.trim()}
-              className="min-h-12 rounded-xl px-6"
+              className="min-h-12 px-6"
             >
               {isPending ? "Saving…" : isEditing ? "Save changes" : "Create task"}
             </Button>

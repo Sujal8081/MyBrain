@@ -32,7 +32,7 @@ export default function ProtectedLayout({
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-svh items-center justify-center bg-[#f7f8f5] text-sm text-[#66726d]">
+        <div className="flex min-h-svh items-center justify-center bg-[#F7F8F6] text-sm text-[#66716C]">
           Loading MyBrain…
         </div>
       }

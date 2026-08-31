@@ -39,7 +39,7 @@ export function QuickAddTask() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="flex min-w-0 items-center gap-2 rounded-[16px] border border-[#E4E8E5] bg-[#F7F8F6] p-1.5 focus-within:border-[#B9C9C0] focus-within:ring-2 focus-within:ring-[#7FAAE0]/40">
         <label htmlFor="quick-task" className="sr-only">
           Task title
         </label>
@@ -47,20 +47,20 @@ export function QuickAddTask() {
           id="quick-task"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          placeholder="What do you need to do?"
+          placeholder="Add a task, reminder, or note..."
           required
           maxLength={200}
           disabled={isPending}
-          className="h-12 rounded-xl bg-[#fafbf9] px-4"
+          className="h-10 min-w-0 border-0 bg-transparent px-3 shadow-none focus-visible:ring-0"
         />
         <Button
           type="submit"
-          size="lg"
+          size="default"
           disabled={isPending || !title.trim()}
-          className="min-h-12 shrink-0 rounded-xl px-6"
+          className="h-10 shrink-0 px-3 sm:px-4"
         >
           <Plus aria-hidden="true" />
-          {isPending ? "Adding…" : "Add"}
+          <span className="hidden min-[380px]:inline">{isPending ? "Adding…" : "Add"}</span>
         </Button>
       </div>
       {feedback ? (
@@ -72,8 +72,8 @@ export function QuickAddTask() {
           {feedback}
         </p>
       ) : (
-        <p className="mt-3 text-xs text-[#7b8580]">
-          Add a simple todo now. You can add details from Tasks later.
+        <p className="mt-2.5 text-xs text-[#7B8580]">
+          Quick Add creates a todo. Add dates and reminders from Tasks.
         </p>
       )}
     </form>

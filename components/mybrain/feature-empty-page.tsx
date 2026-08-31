@@ -22,7 +22,7 @@ export function FeatureEmptyPage({
   tone,
 }: FeatureEmptyPageProps) {
   return (
-    <div>
+    <div className="mx-auto max-w-3xl">
       <PageHeader title={title} description={description} />
       <DashboardCard>
         <EmptyState
