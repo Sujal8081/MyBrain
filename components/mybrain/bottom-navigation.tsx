@@ -76,7 +76,7 @@ export function BottomNavigation() {
       </nav>
 
       <nav aria-label="Primary navigation" className="hidden md:block">
-        <ul className="space-y-1">
+        <ul className="space-y-0.5">
           {navigationItems.map((item) => {
             const active = activeSection === item.section;
             const Icon = item.icon;
@@ -87,11 +87,11 @@ export function BottomNavigation() {
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "flex min-h-11 items-center gap-3 rounded-[14px] px-3 text-sm font-medium text-[#66716C] transition-colors duration-200 hover:bg-[#F2F4F2] hover:text-[#1F2328] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7FAAE0] motion-reduce:transition-none",
-                    active && "bg-[#EAF3EE] font-semibold text-[#3F715A]",
+                    "flex min-h-11 items-center gap-2.5 rounded-xl px-2.5 text-sm font-medium text-[#66716C] transition-colors duration-200 hover:bg-[#F7F8F6] hover:text-[#1F2328] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7FAAE0] motion-reduce:transition-none",
+                    active && "bg-[#F0F5F2] font-semibold text-[#3F715A]",
                   )}
                 >
-                  <Icon aria-hidden="true" className="h-[19px] w-[19px]" strokeWidth={active ? 2.2 : 1.8} />
+                  <Icon aria-hidden="true" className="h-[18px] w-[18px]" strokeWidth={active ? 2.1 : 1.8} />
                   <span>{item.label}</span>
                 </Link>
               </li>

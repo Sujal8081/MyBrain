@@ -162,7 +162,7 @@ Color must not be the only signal; icons, text labels, and semantic structure mu
 
 Geist remains the product font because it is already integrated through `next/font`, has a precise modern UI voice, and avoids adding another asset or runtime dependency. Inter is the fallback direction if the typography system is changed later.
 
-- Greeting: 26–32px, semibold, tight tracking.
+- Greeting: 26–31px, semibold, tight tracking.
 - Page title: 28–30px, semibold, tight tracking.
 - Section labels: 11–13px, uppercase, semibold, subtle tracking.
 - Card titles: 15–17px, semibold.
@@ -174,7 +174,7 @@ Geist remains the product font because it is already integrated through `next/fo
 
 - Mobile is primary: 20px horizontal page padding, reduced to 16px only below 360px.
 - Major section spacing is 24–32px; related controls use 8–14px gaps.
-- Desktop uses a 240px fixed sidebar and a centered content column with a 960px maximum width.
+- Desktop uses a 240px fixed sidebar and a centered content column with a 1120px maximum width.
 - Dense operating surfaces may use the full content column; reading text remains narrower.
 - Cards use 16–20px padding. Empty states stay compact and should never create giant vacant containers.
 - The bottom navigation reserves 68px plus the device safe area. Page content always includes sufficient bottom padding.
@@ -208,10 +208,10 @@ Avoid heavy floating cards, glow, glassmorphism, and gradients.
 - **TaskCard:** compact row hierarchy; completion is the first affordance, edit/delete remain quiet.
 - **ReminderCard:** bell or time icon, task title, date/time, and a labeled upcoming/overdue state.
 - **StatusBadge:** neutral Todo, blue In Progress, green Done, soft red Overdue.
-- **QuickAdd:** one-line capture control with a trailing primary action.
+- **QuickAdd:** one-line capture control with a trailing primary action, placed directly below the dashboard greeting.
 - **SettingsRow:** icon, title, description, optional state, and chevron; 44px-minimum target.
 - **NotesNavigationCard:** document/voice icon, concise description, and directional affordance.
-- **EmptyState:** compact, informative, and action-oriented when an immediate next step exists.
+- **EmptyState:** compact, informative, and action-oriented when an immediate next step exists; dashboard variants stay near 152–200px depending on whether they include an action.
 
 Interactive transitions last 150–220ms and affect color, opacity, border, or a maximum 1px translation. Disable non-essential motion when `prefers-reduced-motion` is set.
 
@@ -247,7 +247,7 @@ Interactive transitions last 150–220ms and affect color, opacity, border, or a
 
 - The sidebar is 240px wide with the brand at top and account/logout at bottom.
 - Active navigation uses a soft green fill and strong green text.
-- Main content is centered and capped at 960px to avoid excessive line length.
+- Main content is centered and capped at 1120px with 32–40px desktop gutters.
 - Cards may gain a subtle border-color change on hover, but actions cannot depend on hover.
 
 ## Navigation Rules

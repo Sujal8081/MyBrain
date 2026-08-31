@@ -73,6 +73,7 @@ async function RemindersContent() {
           icon={Bell}
           title="No reminders yet"
           description="Reminder scheduling and notifications will be added later."
+          compact
         />
       </DashboardCard>
     );

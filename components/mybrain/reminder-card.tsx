@@ -58,7 +58,7 @@ export function ReminderCard({
       <span
         className={cn(
           "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold",
-          overdue ? "bg-[#FBECEC] text-[#9E4444]" : "bg-[#EAF3EE] text-[#3F715A]",
+          overdue ? "bg-[#FBECEC] text-[#9E4444]" : "bg-[#EAF2F8] text-[#456F9F]",
         )}
       >
         {overdue ? "Overdue" : "Upcoming"}

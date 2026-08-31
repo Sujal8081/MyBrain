@@ -231,12 +231,12 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
               <article
                 key={task.id}
                 className={cn(
-                  "surface-card p-4 transition-[border-color,opacity] duration-200 hover:border-[#CBD5D0] sm:p-5 motion-reduce:transition-none",
+                  "surface-card p-3.5 transition-[border-color,opacity] duration-200 hover:border-[#CBD5D0] min-[380px]:p-4 motion-reduce:transition-none",
                   complete && "bg-[#FBFCFB]",
                   taskPending && "opacity-60",
                 )}
               >
-                <div className="flex gap-3 sm:gap-4">
+                <div className="flex gap-3">
                   <button
                     type="button"
                     onClick={() => handleStatusChange(task, complete ? "todo" : "done")}
@@ -253,8 +253,8 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
                   </button>
 
                   <div className="min-w-0 flex-1">
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
                         <h2
                           className={cn(
                             "text-[15px] font-semibold leading-6 text-[#1F2328]",
@@ -264,16 +264,16 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
                           {task.title}
                         </h2>
                         {task.description ? (
-                          <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-[#66716C]">
+                          <p className="mt-0.5 line-clamp-2 whitespace-pre-wrap text-sm leading-5 text-[#66716C]">
                             {task.description}
                           </p>
                         ) : null}
                       </div>
-                      <StatusBadge status={task.status} />
+                      <StatusBadge status={task.status} className="shrink-0 px-2 py-0.5 text-[11px]" />
                     </div>
 
-                    <div className="mt-3.5 flex flex-col gap-3 border-t border-[#EEF1EF] pt-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="flex items-center gap-2 text-xs text-[#66716C]">
+                    <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex min-h-10 items-center gap-2 text-xs text-[#66716C]">
                         {task.due_date ? (
                           <>
                             <CalendarClock aria-hidden="true" className="h-4 w-4 text-[#4F806A]" />
@@ -287,7 +287,7 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
                         )}
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="ml-auto flex items-center gap-1">
                         <select
                           value={task.status}
                           onChange={(event) =>
@@ -295,7 +295,7 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
                           }
                           disabled={taskPending}
                           aria-label={`Change status for ${task.title}`}
-                          className="h-10 max-w-[8.5rem] rounded-xl border border-[#E4E8E5] bg-white px-3 text-xs font-medium text-[#1F2328] outline-none focus-visible:ring-2 focus-visible:ring-[#7FAAE0]"
+                          className="h-11 max-w-[8.5rem] rounded-xl border border-[#E4E8E5] bg-[#F7F8F6] px-3 text-xs font-medium text-[#1F2328] outline-none focus-visible:ring-2 focus-visible:ring-[#7FAAE0]"
                         >
                           <option value="todo">Todo</option>
                           <option value="in_progress">In Progress</option>
@@ -311,7 +311,7 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
                           }}
                           disabled={taskPending}
                           aria-label={`Edit ${task.title}`}
-                          className="h-10 w-10 text-[#66716C]"
+                          className="text-[#66716C]"
                         >
                           <Pencil aria-hidden="true" />
                         </Button>
@@ -322,7 +322,7 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
                           onClick={() => handleDelete(task)}
                           disabled={taskPending}
                           aria-label={`Delete ${task.title}`}
-                          className="h-10 w-10 text-[#A35656] hover:bg-[#FBECEC] hover:text-[#873F3F]"
+                          className="text-[#A35656] hover:bg-[#FBECEC] hover:text-[#873F3F]"
                         >
                           <Trash2 aria-hidden="true" />
                         </Button>

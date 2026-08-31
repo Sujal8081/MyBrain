@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import {
   Bell,
+  CalendarClock,
   CheckCircle2,
   ChevronRight,
   Plus,
@@ -81,12 +82,17 @@ async function DashboardContent() {
   const loadError = tasksResult.error || remindersResult.error;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-7">
       {loadError ? (
         <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           Some dashboard information could not be loaded: {loadError.message}
         </div>
       ) : null}
+
+      <section aria-labelledby="quick-add-heading">
+        <SectionHeader id="quick-add-heading" title="Quick add" />
+        <QuickAddTask />
+      </section>
 
       <section aria-labelledby="today-heading">
         <SectionHeader
@@ -107,6 +113,7 @@ async function DashboardContent() {
               title="Nothing planned for today"
               description="Your day is clear. Add a task when something needs your attention."
               tone="green"
+              compact
               action={
                 <Button asChild size="lg">
                   <Link href="/protected/tasks?new=1">
@@ -123,7 +130,7 @@ async function DashboardContent() {
               <Link
                 key={task.id}
                 href="/protected/tasks"
-                className="surface-card flex min-h-[76px] items-center gap-3.5 px-4 py-3.5 transition-[border-color,transform] duration-200 hover:-translate-y-px hover:border-[#C9D5CE] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7FAAE0] focus-visible:ring-offset-2 motion-reduce:transform-none motion-reduce:transition-none"
+                className="surface-card flex min-h-[72px] items-center gap-3 px-3.5 py-3 transition-[border-color,transform] duration-200 hover:-translate-y-px hover:border-[#C9D5CE] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7FAAE0] focus-visible:ring-offset-2 min-[380px]:px-4 motion-reduce:transform-none motion-reduce:transition-none"
               >
                 <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border ${task.status === "done" ? "border-[#BBD1C4] bg-[#EAF3EE] text-[#4F806A]" : "border-[#D8DFDB] bg-white text-[#8B9690]"}`}>
                   <CheckCircle2 aria-hidden="true" className="h-[19px] w-[19px]" />
@@ -132,13 +139,14 @@ async function DashboardContent() {
                   <span className={`block truncate text-[15px] font-semibold text-[#1F2328] ${task.status === "done" ? "text-[#78827D] line-through" : ""}`}>
                     {task.title}
                   </span>
-                  <span className="mt-1 flex min-w-0 items-center gap-2 text-[13px] text-[#66716C]">
+                  <span className="mt-1 flex min-w-0 items-center gap-1.5 text-[12px] text-[#66716C] sm:text-[13px]">
                     {task.description ? <span className="max-w-[55%] truncate">{task.description}</span> : null}
                     {task.description ? <span aria-hidden="true">·</span> : null}
-                    <span className="truncate">{task.due_date ? formatTaskDate(task.due_date) : "Due today"}</span>
+                    <CalendarClock aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-[#4F806A]" />
+                    <span className="truncate">{task.due_date ? formatTaskDate(task.due_date) : "Today"}</span>
                   </span>
                 </span>
-                <StatusBadge status={task.status} className="hidden sm:inline-flex" />
+                <StatusBadge status={task.status} className="shrink-0 px-2 py-0.5 text-[11px]" />
                 <ChevronRight aria-hidden="true" className="h-4 w-4 shrink-0 text-[#AAB2AE]" />
               </Link>
             ))}
@@ -154,6 +162,7 @@ async function DashboardContent() {
               icon={Bell}
               title="No upcoming reminders"
               description="Reminders scheduled during the next seven days will appear here."
+              compact
             />
           </DashboardCard>
         ) : (
@@ -171,23 +180,17 @@ async function DashboardContent() {
         )}
       </section>
 
-      <section aria-labelledby="quick-add-heading">
-        <SectionHeader id="quick-add-heading" title="Quick add" />
-        <DashboardCard className="p-4 sm:p-5">
-          <QuickAddTask />
-        </DashboardCard>
-      </section>
     </div>
   );
 }
 
 function DashboardLoading() {
   return (
-    <div className="space-y-8 animate-pulse">
+    <div className="space-y-6 animate-pulse">
       {[1, 2, 3].map((item) => (
         <div key={item}>
           <div className="mb-3 h-3 w-24 rounded bg-[#E4E8E5]" />
-          <div className="h-40 rounded-2xl bg-white" />
+          <div className="h-28 rounded-2xl bg-white" />
         </div>
       ))}
     </div>
@@ -197,12 +200,12 @@ function DashboardLoading() {
 export default function ProtectedPage() {
   return (
     <div>
-      <header className="mb-8">
-        <p className="text-sm font-semibold text-[#4F806A]">Good afternoon</p>
-        <h1 className="mt-2 max-w-2xl text-[28px] font-semibold leading-[1.15] tracking-[-0.035em] text-[#1F2328] sm:text-[34px]">
+      <header className="mb-5 sm:mb-6">
+        <p className="text-[13px] font-semibold text-[#4F806A]">Good afternoon</p>
+        <h1 className="mt-1.5 max-w-2xl text-[27px] font-semibold leading-[1.18] tracking-[-0.035em] text-[#1F2328] sm:text-[31px]">
           Here&apos;s what needs your attention.
         </h1>
-        <p className="mt-2.5 max-w-xl text-[15px] leading-6 text-[#66716C]">
+        <p className="mt-2 max-w-xl text-sm leading-6 text-[#66716C] sm:text-[15px]">
           A calm overview of your tasks and reminders for the days ahead.
         </p>
       </header>
