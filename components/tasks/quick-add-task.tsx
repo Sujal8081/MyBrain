@@ -21,18 +21,28 @@ export function QuickAddTask() {
       return;
     }
 
+    const submittedTitle = title.trim();
+    setTitle("");
+
     startTransition(async () => {
-      const result = await createTaskAction({ title, status: "todo" });
+      try {
+        const result = await createTaskAction({ title: submittedTitle, status: "todo" });
 
-      if (!result.success) {
-        setFeedback(result.error);
-        return;
+        if (!result.success) {
+          setTitle(submittedTitle);
+          setFeedback(result.error);
+          return;
+        }
+
+        setFeedback("Task added.");
+      } catch {
+        setTitle(submittedTitle);
+        setFeedback("The task could not be created.");
       }
-
-      setTitle("");
-      setFeedback("Task added.");
     });
   };
+
+  const statusMessage = isPending ? "Adding task…" : feedback;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -60,13 +70,13 @@ export function QuickAddTask() {
           <span className="hidden min-[380px]:inline">{isPending ? "Adding…" : "Add"}</span>
         </Button>
       </div>
-      {feedback ? (
+      {statusMessage ? (
         <p
           role="status"
           aria-live="polite"
-          className={`mt-3 text-sm ${feedback === "Task added." ? "text-[#377458]" : "text-red-700"}`}
+          className={`mt-3 text-sm ${isPending ? "text-[#66716C]" : feedback === "Task added." ? "text-[#377458]" : "text-red-700"}`}
         >
-          {feedback}
+          {statusMessage}
         </p>
       ) : (
         <p className="mt-2.5 text-xs text-[#7B8580]">

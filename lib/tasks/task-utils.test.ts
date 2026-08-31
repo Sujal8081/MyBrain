@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  applyOptimisticTaskAction,
   filterTasks,
   getTaskRevalidationPaths,
   sortTasks,
@@ -117,4 +118,34 @@ test("update, status, and delete invalidate only their affected task views", () 
     "/protected",
     "/protected/reminders",
   ]);
+});
+
+test("optimistic status changes update and re-sort without mutating the base tasks", () => {
+  const first = task({ id: "first", title: "First" });
+  const second = task({ id: "second", title: "Second" });
+  const tasks = [first, second];
+
+  const optimistic = applyOptimisticTaskAction(tasks, {
+    type: "status",
+    taskId: first.id,
+    status: "done",
+  });
+
+  assert.equal(tasks[0]?.status, "todo");
+  assert.equal(optimistic.find((item) => item.id === first.id)?.status, "done");
+  assert.deepEqual(optimistic.map((item) => item.id), [second.id, first.id]);
+});
+
+test("optimistic deletion removes only the selected task without mutating the base tasks", () => {
+  const first = task({ id: "first" });
+  const second = task({ id: "second" });
+  const tasks = [first, second];
+
+  const optimistic = applyOptimisticTaskAction(tasks, {
+    type: "delete",
+    taskId: first.id,
+  });
+
+  assert.deepEqual(optimistic.map((item) => item.id), [second.id]);
+  assert.deepEqual(tasks.map((item) => item.id), [first.id, second.id]);
 });

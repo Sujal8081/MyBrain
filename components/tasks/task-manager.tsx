@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useOptimistic, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   CalendarClock,
@@ -25,6 +25,7 @@ import { TaskForm } from "@/components/tasks/task-form";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
+  applyOptimisticTaskAction,
   filterTasks,
   formatTaskDate,
   sortTasks,
@@ -53,13 +54,26 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [showForm, setShowForm] = useState(searchParams.get("new") === "1");
   const [feedback, setFeedback] = useState<string | null>(initialError || null);
-  const [pendingTaskId, setPendingTaskId] = useState<string | null>(null);
+  const [pendingTaskIds, setPendingTaskIds] = useState<Set<string>>(() => new Set());
   const [isPending, startTransition] = useTransition();
+  const [optimisticTasks, updateOptimisticTasks] = useOptimistic(
+    tasks,
+    applyOptimisticTaskAction,
+  );
 
   const visibleTasks = useMemo(
-    () => filterTasks(sortTasks(tasks), filter),
-    [filter, tasks],
+    () => filterTasks(sortTasks(optimisticTasks), filter),
+    [filter, optimisticTasks],
   );
+
+  const markTaskPending = (taskId: string, pending: boolean) => {
+    setPendingTaskIds((current) => {
+      const next = new Set(current);
+      if (pending) next.add(taskId);
+      else next.delete(taskId);
+      return next;
+    });
+  };
 
   const closeForm = () => {
     setShowForm(false);
@@ -83,21 +97,28 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
   const handleStatusChange = (task: Task, status: TaskStatus) => {
     if (task.status === status) return;
     setFeedback(null);
-    setPendingTaskId(task.id);
+    markTaskPending(task.id, true);
 
     startTransition(async () => {
-      const result = await updateTaskStatusAction(task.id, status);
-      setPendingTaskId(null);
+      updateOptimisticTasks({ type: "status", taskId: task.id, status });
 
-      if (!result.success || !result.task) {
-        setFeedback(result.success ? "The task could not be updated." : result.error);
-        return;
+      try {
+        const result = await updateTaskStatusAction(task.id, status);
+
+        if (!result.success || !result.task) {
+          setFeedback(result.success ? "The task could not be updated." : result.error);
+          return;
+        }
+
+        setTasks((current) =>
+          sortTasks(current.map((item) => (item.id === task.id ? result.task! : item))),
+        );
+        setFeedback(status === "done" ? "Task completed." : "Task status updated.");
+      } catch {
+        setFeedback("The task could not be updated.");
+      } finally {
+        markTaskPending(task.id, false);
       }
-
-      setTasks((current) =>
-        sortTasks(current.map((item) => (item.id === task.id ? result.task! : item))),
-      );
-      setFeedback(status === "done" ? "Task completed." : "Task status updated.");
     });
   };
 
@@ -108,18 +129,25 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
     if (!confirmed) return;
 
     setFeedback(null);
-    setPendingTaskId(task.id);
+    markTaskPending(task.id, true);
     startTransition(async () => {
-      const result = await deleteTaskAction(task.id);
-      setPendingTaskId(null);
+      updateOptimisticTasks({ type: "delete", taskId: task.id });
 
-      if (!result.success) {
-        setFeedback(result.error);
-        return;
+      try {
+        const result = await deleteTaskAction(task.id);
+
+        if (!result.success) {
+          setFeedback(result.error);
+          return;
+        }
+
+        setTasks((current) => current.filter((item) => item.id !== task.id));
+        setFeedback("Task deleted.");
+      } catch {
+        setFeedback("The task could not be deleted.");
+      } finally {
+        markTaskPending(task.id, false);
       }
-
-      setTasks((current) => current.filter((item) => item.id !== task.id));
-      setFeedback("Task deleted.");
     });
   };
 
@@ -150,8 +178,8 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
           {filters.map((item) => {
             const count =
               item.value === "all"
-                ? tasks.length
-                : tasks.filter((task) => task.status === item.value).length;
+                ? optimisticTasks.length
+                : optimisticTasks.filter((task) => task.status === item.value).length;
             const selected = filter === item.value;
 
             return (
@@ -196,15 +224,15 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
         <div className="surface-card">
           <EmptyState
             icon={filter === "done" ? CheckCircle2 : ListChecks}
-            title={tasks.length === 0 ? "No tasks yet" : `No ${filters.find((item) => item.value === filter)?.label.toLowerCase()} tasks`}
+            title={optimisticTasks.length === 0 ? "No tasks yet" : `No ${filters.find((item) => item.value === filter)?.label.toLowerCase()} tasks`}
             description={
-              tasks.length === 0
+              optimisticTasks.length === 0
                 ? "Create your first task and MyBrain will keep it close at hand."
                 : "Try another filter or update a task's status."
             }
             tone="green"
             action={
-              tasks.length === 0 ? (
+              optimisticTasks.length === 0 ? (
                 <Button
                   type="button"
                   size="lg"
@@ -221,7 +249,7 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
       ) : (
         <div className="space-y-2.5" aria-busy={isPending}>
           {visibleTasks.map((task) => {
-            const taskPending = pendingTaskId === task.id;
+            const taskPending = pendingTaskIds.has(task.id);
             const complete = task.status === "done";
 
             return (

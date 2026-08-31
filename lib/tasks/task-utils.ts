@@ -3,6 +3,9 @@ export const taskStatuses = ["todo", "in_progress", "done"] as const;
 export type TaskStatus = (typeof taskStatuses)[number];
 export type TaskFilter = "all" | TaskStatus;
 export type TaskMutationKind = "create" | "update" | "status" | "delete";
+export type OptimisticTaskAction =
+  | { type: "status"; taskId: string; status: TaskStatus }
+  | { type: "delete"; taskId: string };
 
 interface TaskRevalidationOptions {
   dueDate?: string | null;
@@ -69,6 +72,21 @@ export function getTaskRevalidationPaths(
   }
 
   return paths;
+}
+
+export function applyOptimisticTaskAction(
+  tasks: Task[],
+  action: OptimisticTaskAction,
+) {
+  if (action.type === "delete") {
+    return tasks.filter((task) => task.id !== action.taskId);
+  }
+
+  return sortTasks(
+    tasks.map((task) =>
+      task.id === action.taskId ? { ...task, status: action.status } : task,
+    ),
+  );
 }
 
 export function sortTasks(tasks: Task[]) {
