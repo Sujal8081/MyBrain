@@ -2,6 +2,12 @@ export const taskStatuses = ["todo", "in_progress", "done"] as const;
 
 export type TaskStatus = (typeof taskStatuses)[number];
 export type TaskFilter = "all" | TaskStatus;
+export type TaskMutationKind = "create" | "update" | "status" | "delete";
+
+interface TaskRevalidationOptions {
+  dueDate?: string | null;
+  reminderAt?: string | null;
+}
 
 export interface Task {
   id: string;
@@ -43,6 +49,26 @@ export function validateTaskTitle(
 export function filterTasks(tasks: Task[], filter: TaskFilter) {
   if (filter === "all") return tasks;
   return tasks.filter((task) => task.status === filter);
+}
+
+export function getTaskRevalidationPaths(
+  kind: TaskMutationKind,
+  options: TaskRevalidationOptions = {},
+) {
+  const paths = ["/protected/tasks"];
+
+  if (kind === "create") {
+    if (options.dueDate || options.reminderAt) paths.push("/protected");
+    if (options.reminderAt) paths.push("/protected/reminders");
+    return paths;
+  }
+
+  paths.push("/protected");
+  if (kind === "update" || kind === "delete") {
+    paths.push("/protected/reminders");
+  }
+
+  return paths;
 }
 
 export function sortTasks(tasks: Task[]) {

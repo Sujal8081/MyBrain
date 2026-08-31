@@ -78,7 +78,6 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
     });
     setFeedback(message);
     closeForm();
-    router.refresh();
   };
 
   const handleStatusChange = (task: Task, status: TaskStatus) => {
@@ -99,7 +98,6 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
         sortTasks(current.map((item) => (item.id === task.id ? result.task! : item))),
       );
       setFeedback(status === "done" ? "Task completed." : "Task status updated.");
-      router.refresh();
     });
   };
 
@@ -122,7 +120,6 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
 
       setTasks((current) => current.filter((item) => item.id !== task.id));
       setFeedback("Task deleted.");
-      router.refresh();
     });
   };
 

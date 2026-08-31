@@ -4,9 +4,11 @@ import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
 import {
+  getTaskRevalidationPaths,
   isTaskStatus,
   validateTaskTitle,
   type Task,
+  type TaskMutationKind,
   type TaskStatus,
 } from "@/lib/tasks/task-utils";
 
@@ -37,10 +39,11 @@ async function getAuthenticatedContext() {
   return { success: true, supabase, userId } as const;
 }
 
-function refreshTaskViews() {
-  revalidatePath("/protected");
-  revalidatePath("/protected/tasks");
-  revalidatePath("/protected/reminders");
+function refreshTaskViews(
+  kind: TaskMutationKind,
+  options: Pick<TaskMutationInput, "dueDate" | "reminderAt"> = {},
+) {
+  getTaskRevalidationPaths(kind, options).forEach((path) => revalidatePath(path));
 }
 
 export async function createTaskAction(
@@ -93,7 +96,7 @@ export async function createTaskAction(
     }
   }
 
-  refreshTaskViews();
+  refreshTaskViews("create", input);
   return { success: true, task: task as Task };
 }
 
@@ -134,7 +137,7 @@ export async function updateTaskAction(
     };
   }
 
-  refreshTaskViews();
+  refreshTaskViews("update");
   return { success: true, task: task as Task };
 }
 
@@ -165,7 +168,7 @@ export async function updateTaskStatusAction(
     };
   }
 
-  refreshTaskViews();
+  refreshTaskViews("status");
   return { success: true, task: task as Task };
 }
 
@@ -184,6 +187,6 @@ export async function deleteTaskAction(taskId: string): Promise<TaskActionResult
     return { success: false, error: error.message };
   }
 
-  refreshTaskViews();
+  refreshTaskViews("delete");
   return { success: true };
 }

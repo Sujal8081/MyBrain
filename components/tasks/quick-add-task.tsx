@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 
 import { createTaskAction } from "@/app/protected/tasks/actions";
@@ -12,7 +11,6 @@ export function QuickAddTask() {
   const [title, setTitle] = useState("");
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -33,7 +31,6 @@ export function QuickAddTask() {
 
       setTitle("");
       setFeedback("Task added.");
-      router.refresh();
     });
   };
 

@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   filterTasks,
+  getTaskRevalidationPaths,
   sortTasks,
   toIsoDateTime,
   validateTaskTitle,
@@ -81,4 +82,39 @@ test("toIsoDateTime combines a local date and time into a database timestamp", (
 
   assert.equal(result, new Date("2026-08-29T14:30:00").toISOString());
   assert.equal(toIsoDateTime("", "14:30"), null);
+});
+
+test("Quick Add invalidates only the task route", () => {
+  assert.deepEqual(getTaskRevalidationPaths("create", {}), ["/protected/tasks"]);
+});
+
+test("creating a dated task invalidates Tasks and Dashboard", () => {
+  assert.deepEqual(
+    getTaskRevalidationPaths("create", { dueDate: "2026-08-29T14:30:00.000Z" }),
+    ["/protected/tasks", "/protected"],
+  );
+});
+
+test("creating a reminder also invalidates Dashboard and Reminders", () => {
+  assert.deepEqual(
+    getTaskRevalidationPaths("create", { reminderAt: "2026-08-29T14:30:00.000Z" }),
+    ["/protected/tasks", "/protected", "/protected/reminders"],
+  );
+});
+
+test("update, status, and delete invalidate only their affected task views", () => {
+  assert.deepEqual(getTaskRevalidationPaths("update"), [
+    "/protected/tasks",
+    "/protected",
+    "/protected/reminders",
+  ]);
+  assert.deepEqual(getTaskRevalidationPaths("status"), [
+    "/protected/tasks",
+    "/protected",
+  ]);
+  assert.deepEqual(getTaskRevalidationPaths("delete"), [
+    "/protected/tasks",
+    "/protected",
+    "/protected/reminders",
+  ]);
 });
