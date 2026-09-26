@@ -14,7 +14,7 @@ import {
   ShoppingBag,
   X,
 } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./storefront.module.css";
 
 type Product = {
@@ -53,6 +53,7 @@ export function Storefront() {
   const [query, setQuery] = useState("");
   const [newsletterNotice, setNewsletterNotice] = useState(false);
   const [checkoutStarted, setCheckoutStarted] = useState(false);
+  const drawerRef = useRef<HTMLElement>(null);
 
   const filteredProducts = useMemo(() => {
     const byCategory = activeCategory === "All" ? products : products.filter((product) => product.category === activeCategory);
@@ -69,12 +70,60 @@ export function Storefront() {
       if (event.key === "Escape") {
         setCartOpen(false);
         setSearchOpen(false);
+        setQuery("");
         setMenuOpen(false);
       }
     }
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
   }, []);
+
+  useEffect(() => {
+    if (!cartOpen || !drawerRef.current) return;
+
+    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const drawer = drawerRef.current;
+    const focusableSelector = "button:not([disabled]), a[href], input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])";
+    const firstFocusable = drawer.querySelector<HTMLElement>(focusableSelector);
+    const previousOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+    firstFocusable?.focus();
+
+    function trapFocus(event: KeyboardEvent) {
+      if (event.key !== "Tab") return;
+      const focusable = Array.from(drawer.querySelectorAll<HTMLElement>(focusableSelector));
+      if (focusable.length === 0) {
+        event.preventDefault();
+        drawer.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    drawer.addEventListener("keydown", trapFocus);
+    return () => {
+      drawer.removeEventListener("keydown", trapFocus);
+      document.body.style.overflow = previousOverflow;
+      previouslyFocused?.focus();
+    };
+  }, [cartOpen]);
+
+  function toggleSearch() {
+    setSearchOpen((open) => {
+      if (open) setQuery("");
+      return !open;
+    });
+  }
 
   function addToCart(product: Product) {
     setCart((current) => {
@@ -114,7 +163,7 @@ export function Storefront() {
           <a href="#journal">Journal</a>
         </nav>
         <div className={styles.headerActions}>
-          <button className={styles.iconButton} onClick={() => setSearchOpen((open) => !open)} aria-label="Search products" aria-expanded={searchOpen}>
+          <button className={styles.iconButton} onClick={toggleSearch} aria-label="Search products" aria-expanded={searchOpen}>
             <Search size={20} />
           </button>
           <button className={styles.cartButton} onClick={() => setCartOpen(true)} aria-label={`Open bag with ${itemCount} items`}>
@@ -266,9 +315,9 @@ export function Storefront() {
       </footer>
 
       {cartOpen && (
-        <div className={styles.drawerLayer} role="dialog" aria-modal="true" aria-label="Shopping bag">
-          <button className={styles.backdrop} onClick={() => setCartOpen(false)} aria-label="Close bag" />
-          <aside className={styles.drawer}>
+        <div className={styles.drawerLayer}>
+          <button className={styles.backdrop} onClick={() => setCartOpen(false)} aria-label="Close bag" tabIndex={-1} />
+          <aside ref={drawerRef} className={styles.drawer} role="dialog" aria-modal="true" aria-label="Shopping bag" tabIndex={-1}>
             <div className={styles.drawerHeader}><div><p>Your bag</p><span>{itemCount} {itemCount === 1 ? "piece" : "pieces"}</span></div><button onClick={() => setCartOpen(false)} aria-label="Close bag"><X /></button></div>
             {cart.length === 0 ? (
               <div className={styles.emptyBag}><ShoppingBag size={34} strokeWidth={1.3} /><h2>Your bag is quiet.</h2><p>Explore our collection and find something made to stay.</p><button onClick={() => setCartOpen(false)}>Continue exploring</button></div>
