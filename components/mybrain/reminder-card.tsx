@@ -68,9 +68,10 @@ export function ReminderCard({
   );
 
   const className = cn(
-    "flex items-center gap-3.5 rounded-2xl border border-[#E4E8E5] bg-white px-4 transition-[border-color,background-color,transform] duration-200 motion-reduce:transition-none",
+    "relative flex items-center gap-3.5 overflow-hidden rounded-2xl border border-[#E1E8E5] bg-white px-4 transition-[border-color,background-color,box-shadow,transform] duration-200 before:absolute before:inset-y-3 before:left-0 before:w-[3px] before:rounded-r-full before:bg-[#7FAAE0] md:shadow-[0_7px_22px_rgba(31,35,40,0.03)] motion-reduce:transition-none",
     compact ? "min-h-[72px] py-3" : "min-h-20 py-4",
-    href && "hover:-translate-y-px hover:border-[#C9D5CE] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7FAAE0] focus-visible:ring-offset-2",
+    overdue && "before:bg-[#C85B5B]",
+    href && "hover:border-[#C9D5CE] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7FAAE0] focus-visible:ring-offset-2 md:hover:-translate-y-px md:hover:shadow-[0_10px_28px_rgba(31,35,40,0.045)]",
   );
 
   return href ? (

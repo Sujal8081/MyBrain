@@ -11,6 +11,7 @@ import {
   ListChecks,
   Pencil,
   Plus,
+  Search,
   Trash2,
 } from "lucide-react";
 
@@ -51,6 +52,7 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
   const router = useRouter();
   const [tasks, setTasks] = useState(() => sortTasks(initialTasks));
   const [filter, setFilter] = useState<TaskFilter>("all");
+  const [query, setQuery] = useState("");
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [showForm, setShowForm] = useState(searchParams.get("new") === "1");
   const [feedback, setFeedback] = useState<string | null>(initialError || null);
@@ -62,8 +64,16 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
   );
 
   const visibleTasks = useMemo(
-    () => filterTasks(sortTasks(optimisticTasks), filter),
-    [filter, optimisticTasks],
+    () => {
+      const normalizedQuery = query.trim().toLocaleLowerCase();
+      return filterTasks(sortTasks(optimisticTasks), filter).filter(
+        (task) =>
+          !normalizedQuery ||
+          task.title.toLocaleLowerCase().includes(normalizedQuery) ||
+          task.description?.toLocaleLowerCase().includes(normalizedQuery),
+      );
+    },
+    [filter, optimisticTasks, query],
   );
 
   const markTaskPending = (taskId: string, pending: boolean) => {
@@ -168,10 +178,23 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
             }}
           >
             <Plus aria-hidden="true" />
-            Add task
+            Add Task
           </Button>
         }
       />
+
+      <div className="mb-4 flex min-h-11 items-center gap-2.5 rounded-[14px] border border-[#E0E6E2] bg-white px-3.5 focus-within:border-[#B7C9BF] focus-within:ring-2 focus-within:ring-[#7FAAE0]/30 md:shadow-[0_6px_20px_rgba(31,35,40,0.03)]">
+        <Search aria-hidden="true" className="h-[18px] w-[18px] shrink-0 text-[#819089]" strokeWidth={1.9} />
+        <label htmlFor="task-search" className="sr-only">Search tasks</label>
+        <input
+          id="task-search"
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Search tasks..."
+          className="h-11 min-w-0 flex-1 bg-transparent text-sm text-[#1F2328] outline-none placeholder:text-[#98A29D]"
+        />
+      </div>
 
       <div className="mb-5 max-w-full overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex min-w-max gap-2" role="tablist" aria-label="Filter tasks">
@@ -224,26 +247,21 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
         <div className="surface-card">
           <EmptyState
             icon={filter === "done" ? CheckCircle2 : ListChecks}
-            title={optimisticTasks.length === 0 ? "No tasks yet" : `No ${filters.find((item) => item.value === filter)?.label.toLowerCase()} tasks`}
+            title={
+              query.trim()
+                ? "No matching tasks"
+                : optimisticTasks.length === 0
+                  ? "No tasks yet"
+                  : `No ${filters.find((item) => item.value === filter)?.label.toLowerCase()} tasks`
+            }
             description={
-              optimisticTasks.length === 0
+              query.trim()
+                ? "Try a different search or status filter."
+                : optimisticTasks.length === 0
                 ? "Create your first task and MyBrain will keep it close at hand."
                 : "Try another filter or update a task's status."
             }
             tone="green"
-            action={
-              optimisticTasks.length === 0 ? (
-                <Button
-                  type="button"
-                  size="lg"
-                  onClick={() => setShowForm(true)}
-                  className="min-h-12"
-                >
-                  <Plus aria-hidden="true" />
-                  Add your first task
-                </Button>
-              ) : undefined
-            }
           />
         </div>
       ) : (
@@ -256,7 +274,8 @@ export function TaskManager({ initialTasks, initialError }: TaskManagerProps) {
               <article
                 key={task.id}
                 className={cn(
-                  "surface-card p-3.5 transition-[border-color,opacity] duration-200 hover:border-[#CBD5D0] min-[380px]:p-4 motion-reduce:transition-none",
+                  "surface-card relative overflow-hidden border-l-[3px] p-3.5 transition-[border-color,box-shadow,opacity,transform] duration-200 hover:border-[#CBD5D0] min-[380px]:p-4 md:hover:-translate-y-px md:hover:shadow-[0_10px_28px_rgba(31,35,40,0.05)] motion-reduce:transform-none motion-reduce:transition-none",
+                  task.status === "in_progress" ? "border-l-[#7FAAE0]" : "border-l-[#8FAE9A]",
                   complete && "bg-[#FBFCFB]",
                   taskPending && "opacity-60",
                 )}
