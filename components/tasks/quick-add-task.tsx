@@ -7,7 +7,11 @@ import { createTaskAction } from "@/app/protected/tasks/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export function QuickAddTask() {
+interface QuickAddTaskProps {
+  compact?: boolean;
+}
+
+export function QuickAddTask({ compact = false }: QuickAddTaskProps) {
   const [title, setTitle] = useState("");
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -46,7 +50,7 @@ export function QuickAddTask() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex min-w-0 items-center gap-2 rounded-[16px] border border-[#E4E8E5] bg-[#F7F8F6] p-1.5 focus-within:border-[#B9C9C0] focus-within:ring-2 focus-within:ring-[#7FAAE0]/40">
+      <div className="flex min-w-0 items-center gap-2 rounded-[16px] border border-[#DCE4DF] bg-white p-1.5 transition-[border-color,box-shadow] focus-within:border-[#AFC4B7] focus-within:ring-2 focus-within:ring-[#7FAAE0]/35 md:shadow-[0_7px_22px_rgba(31,35,40,0.05)] md:focus-within:shadow-[0_9px_26px_rgba(79,128,106,0.08)]">
         <label htmlFor="quick-task" className="sr-only">
           Task title
         </label>
@@ -78,7 +82,7 @@ export function QuickAddTask() {
         >
           {statusMessage}
         </p>
-      ) : (
+      ) : compact ? null : (
         <p className="mt-2.5 text-xs text-[#7B8580]">
           Quick Add creates a todo. Add dates and reminders from Tasks.
         </p>

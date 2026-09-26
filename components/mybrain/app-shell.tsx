@@ -12,27 +12,30 @@ export function AppShell({ children, email }: AppShellProps) {
 
   return (
     <div className="min-h-svh bg-[#F7F8F6] text-[#1F2328]">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 border-r border-[#E4E8E5] bg-white px-4 py-5 md:flex md:flex-col">
-        <BrandMark className="mb-6 px-1.5" />
-        <BottomNavigation />
-        <div className="mt-auto border-t border-[#EEF1EF] pt-3">
-          <div className="mb-1 flex items-center gap-2.5 rounded-xl px-2 py-1.5">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F0F4F2] text-xs font-semibold text-[#66716C]">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[230px] border-r border-[#DFE6E1] bg-[linear-gradient(180deg,#FFFFFF_0%,#FBFCFB_58%,#F5F8F6_100%)] px-3.5 py-4 md:flex md:flex-col">
+        <div className="mb-5 border-b border-[#E4EBE7] px-2 py-2.5">
+          <BrandMark />
+        </div>
+        <BottomNavigation variant="desktop" />
+        <div className="mt-auto rounded-2xl border border-[#E2E8E4] bg-white p-2.5">
+          <div className="flex items-center gap-2.5 rounded-xl bg-[#F7F9F8] px-2.5 py-2">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#DCE7E1] bg-[#EAF3EE] text-xs font-semibold text-[#3F715A]">
               {initial}
             </span>
-            <span className="min-w-0 truncate text-xs font-medium text-[#66716C]">
-              {email || "Your account"}
+            <span className="min-w-0">
+              <span className="block text-[10px] font-semibold uppercase tracking-[0.1em] text-[#8A958F]">Signed in</span>
+              <span className="block truncate text-xs font-medium text-[#53615A]">{email || "Your account"}</span>
             </span>
           </div>
           <LogoutButton
             variant="ghost"
-            className="h-11 w-full justify-start px-2.5 text-xs font-medium text-[#7B8580] hover:bg-[#F7F8F6] hover:text-[#1F2328]"
+            className="mt-1 h-10 w-full justify-start rounded-xl px-2.5 text-xs font-medium text-[#7B8580] hover:bg-[#F4F7F5] hover:text-[#1F2328]"
           />
         </div>
       </aside>
 
-      <div className="md:pl-60">
-        <header className="sticky top-0 z-40 border-b border-[#E4E8E5] bg-[#F7F8F6]/95 px-5 py-3 backdrop-blur md:hidden">
+      <div className="md:pl-[230px]">
+        <header className="sticky top-0 z-40 border-b border-[#E4E8E5] bg-[#F7F8F6] px-5 py-3 md:hidden">
           <div className="mx-auto flex max-w-lg items-center justify-between">
             <BrandMark compact />
             <div
@@ -45,12 +48,12 @@ export function AppShell({ children, email }: AppShellProps) {
           </div>
         </header>
 
-        <main className="mx-auto min-h-svh w-full max-w-[1120px] px-4 pb-[calc(6.75rem+env(safe-area-inset-bottom))] pt-6 min-[380px]:px-5 sm:px-8 md:pb-14 md:pt-8 lg:px-10">
+        <main className="mx-auto min-h-svh w-full max-w-[1060px] px-4 pb-[calc(6.75rem+env(safe-area-inset-bottom))] pt-6 min-[380px]:px-5 sm:px-8 md:pb-14 md:pt-8 lg:px-10">
           {children}
         </main>
       </div>
 
-      <BottomNavigation />
+      <BottomNavigation variant="mobile" />
     </div>
   );
 }

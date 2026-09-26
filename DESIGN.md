@@ -174,20 +174,20 @@ Geist remains the product font because it is already integrated through `next/fo
 
 - Mobile is primary: 20px horizontal page padding, reduced to 16px only below 360px.
 - Major section spacing is 24–32px; related controls use 8–14px gaps.
-- Desktop uses a 240px fixed sidebar and a centered content column with a 1120px maximum width.
+- Desktop uses a 230px fixed sidebar and a centered content column with a 1060px maximum width.
 - Dense operating surfaces may use the full content column; reading text remains narrower.
 - Cards use 16–20px padding. Empty states stay compact and should never create giant vacant containers.
 - The bottom navigation reserves 68px plus the device safe area. Page content always includes sufficient bottom padding.
 
 ## Elevation & Depth
 
-Most surfaces are flat white with a `#E4E8E5` border. Use a single subtle shadow only where separation from the canvas is otherwise unclear:
+Most surfaces are flat white with a `#E4E8E5` border. Use a single subtle shadow only where separation from the canvas is otherwise unclear. One low-contrast sage-to-blue ambient wash may support a key orientation surface such as the dashboard header or inactive chat canvas; it must remain decorative and subordinate to content:
 
 - Standard card: `0 1px 2px rgba(31,35,40,0.025), 0 8px 24px rgba(31,35,40,0.035)`.
 - Modal/sheet: `0 24px 64px rgba(31,35,40,0.14)`.
 - Bottom navigation: a faint upward shadow below 6% opacity.
 
-Avoid heavy floating cards, glow, glassmorphism, and gradients.
+Avoid heavy floating cards, sharp glow, glassmorphism, and repeated gradients.
 
 ## Shapes
 
@@ -231,7 +231,7 @@ Interactive transitions last 150–220ms and affect color, opacity, border, or a
 - Do not turn product pages into marketing heroes or metric dashboards.
 - Do not wrap short lists inside oversized empty panels.
 - Do not add fake data, decorative statistics, or non-functional complexity.
-- Do not use gradients, neon, repeated icon-topper tiles, or strong shadows.
+- Do not use saturated or repeated gradients, neon, repeated icon-topper tiles, or strong shadows.
 - Do not hide essential actions behind hover-only interactions.
 - Do not add visual changes that alter Supabase, authentication, RLS, task, or reminder behavior.
 
@@ -245,9 +245,9 @@ Interactive transitions last 150–220ms and affect color, opacity, border, or a
 
 ## Desktop Behavior
 
-- The sidebar is 240px wide with the brand at top and account/logout at bottom.
+- The sidebar is 230px wide with the brand at top and account/logout at bottom.
 - Active navigation uses a soft green fill and strong green text.
-- Main content is centered and capped at 1120px with 32–40px desktop gutters.
+- Main content is centered and capped at 1060px with 32–40px desktop gutters.
 - Cards may gain a subtle border-color change on hover, but actions cannot depend on hover.
 
 ## Navigation Rules
@@ -256,7 +256,7 @@ Interactive transitions last 150–220ms and affect color, opacity, border, or a
 - Tasks owns `/protected/tasks` and descendants.
 - Chat owns `/protected/chat` and descendants.
 - Notes owns Notes, Documents, and Voice Notes routes.
-- More owns More, Reminders, Account, and future settings routes.
+- The desktop sidebar exposes Reminders directly; mobile More owns Reminders, Account, and future settings routes.
 - Exactly one primary destination may appear active at a time.
 
 ## Status Colors
